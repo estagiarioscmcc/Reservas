@@ -1,0 +1,346 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <link href='http://fonts.googleapis.com/css?family=Play' rel='stylesheet' type='text/css'/>
+        <title>Calendario</title>
+    </h:head>
+    <h:body onload="#{loginBean.isLogado()}">
+
+        <h:outputStylesheet library="css" name="style.css"  />
+        <p:layout fullPage="true" >  
+            <p:dialog header="Sobre" draggable="false"  modal="true"  appendToBody="true" widgetVar="dlg2" height="220" resizable="false">
+                <h:outputText escape="false" value="Sistema de reserva de salas e recursos" /> <br/>
+                <h:outputText escape="false" value="Desenvolvido no CMCC-UFABC" /> <br/>
+                <h:outputText escape="false" value="Coordenação:  Prof. André G. R. Balan" /> <br/><br/>
+                <h:outputText escape="false" value="Desenvolvimento:" /> <br/>
+                <h:outputText escape="false" value="André G. R Balan (andre.balan@ufabc.edu.br)" /> <br/>
+                <h:outputText escape="false" value="Charles Porto Ferreira (charles.ferreira@aluno.ufabc.edu.br)" /> <br/>
+                <h:outputText escape="false" value="Juliana Calió (juliana.calio@aluno.ufabc.edu.br)" /> <br/>
+                <h:outputText escape="false" value="Vinicius Pavia (vcpavia@aluno.ufabc.edu.br)" /> <br/><br/>
+                <h:outputText escape="false" value="Colaboradores:" /> <br/>
+                <h:outputText escape="false" value="Elaine Konno Rocha" /> <br/>
+                        
+            </p:dialog>
+            <p:layoutUnit position="north" style="text-align:center" size="60"   resizable="true"  closable="true" collapsible="true"  >  
+                                
+                <h:form id ="f2" >
+
+                    <h:commandLink   onclick="PF('dlg2').show(); return false;" value="Sobre" 
+                                     style="position: relative; right: 650px ;color: #2E8B57; top: 10px"></h:commandLink>
+                    
+                    
+                    <h:commandLink value="Logout" style="position: relative; left: 650px;color: #2E8B57; top: 10px" 
+                                   action="#{loginBean.doLogout()}" immediate="true"/>
+                </h:form>
+                <style type="text/css">
+
+                    .ui-layout-unit-content{background-image:url('resources/images/grey-back.jpg');}
+                </style>
+                <div style="color: #2E8B57 ;font-family: 'Play', serif;font-size: 24px; position: relative;">Calendário de Alocação de Salas e Equipamentos</div>
+
+
+            </p:layoutUnit> 
+
+            <p:layoutUnit position="west" size="180" header="Recursos" style="text-align: center" resizable="true" closable="true" collapsible="true" >  
+
+
+                <h:form id="form1">
+
+
+
+                    <p:dataTable  id="dtSala" var="sala" value="#{calendarioController.salaDataModel}" widgetVar="wdgListSala" 
+                                  selection="#{calendarioController.novaSala}"  selectionMode="single" >  
+
+                        <p:ajax event="rowSelect"  update=":form:schedule" listener="#{calendarioController.escolheSala()}"/>  
+
+                        <p:column headerText="Salas"  >  
+                            #{sala.numero} 
+                        </p:column>  
+                    </p:dataTable>  
+                    <!--                    <br/>-->
+                    <p:commandButton id="mostrarSalas"  value="Todas as Salas" actionListener="#{calendarioController.selecionaVisualizacaoTodasSalas()}" 
+                                     update=":form:schedule"  style=" position: relative;top: 10px"/>
+                </h:form>
+
+                <!--                <br/>-->
+                <h:form id="form2" style="position: relative; top: 17px">
+                    <p:dataTable   id="dtEquipamento" var="equipamento" value="#{calendarioController.equipamentoDataModel}" widgetVar="wdgListEquipamento" 
+                                   selection="#{calendarioController.novoEquipamento}"  selectionMode="single" >  
+
+                        <p:ajax event="rowSelect"  update=":form:schedule" listener="#{calendarioController.escolheEquipamento()}"/>  
+
+                        <p:column headerText="Equipamentos" >  
+                            #{equipamento.descricao} 
+                        </p:column>  
+                    </p:dataTable> 
+
+                    <p:commandButton id="mostrarEquipamentos"  value="Todos Equipamentos" actionListener="#{calendarioController.selecionaVisualizacaoTodosEquipamentos()}" 
+                                     update=":form:schedule"  style=" position: relative;top: 10px"/>
+
+                    <p:separator/>
+<!--                <h:link outcome="/index" value="Gerenciar Dados" style="text-align: center"  onclick="#{calendarioController.inicializarVariaveis()}"/>-->
+                    <p:commandButton value="Gerenciar Dados" id="btnDados" style="width: 140px; font-size: smaller" action="/index" immediate="true" onclick="#{calendarioController.inicializarVariaveis()}"/> 
+
+                </h:form>  
+
+
+
+
+            </p:layoutUnit>  
+
+            <p:layoutUnit position="center">  
+                <h:form id="form">  
+                    <p:growl id="messages" showDetail="true" />  
+
+                    <p:schedule showWeekends="true"    allDaySlot="true" view="month" minTime="7"  maxTime="22" 
+                                axisFormat="H:mm" timeFormat="H:mm{ - H:mm}" id="schedule" value="#{calendarioController.eventModel}" 
+                                widgetVar="myschedule"   locale="br"  >  
+                        <p:ajax  event="dateSelect" listener="#{calendarioController.onDateSelect}"  update="eventDetails,janela"   /> 
+                        <p:ajax event="eventSelect" listener="#{calendarioController.onReservaSelect}" update="eventDetails,janela"  />  
+                        <p:ajax event="eventMove" listener="#{calendarioController.onReservaMove}" update="messages" oncomplete="myschedule.update()" />  
+                        <p:ajax event="eventResize" listener="#{calendarioController.onEventResize}" update="messages" oncomplete="myschedule.update()" />  
+                    </p:schedule> 
+
+                    <p:dialog id="janela" widgetVar="detalhesReserva" header="Detalhes da Reserva: #{calendarioController.current.instance} 
+                              #{calendarioController.current.toString()}"   >
+                        <h:panelGrid id="eventDetails" columns="2"  > 
+
+                            <h:outputLabel value="Reservante*: " for="ac_reservante"/>  
+                            <p:autoComplete value="#{calendarioController.reserva.reservante}" id="ac_reservante" 
+                                            completeMethod="#{calendarioController.completeReservante}"  
+                                            var="p" itemLabel="#{p.nome}" itemValue="#{p}" forceSelection="true" 
+                                            required="true" queryDelay="0" requiredMessage="Por favor especifique o nome do reservante" />  
+
+                            <h:outputLabel for="from" value="Inicio*:" rendered="#{calendarioController.reserva.grupoReserva==null}"/>  
+
+                            <p:calendar id="from" value="#{calendarioController.reserva.inicio}" 
+                                        minHour="07" timeOnly="false" pattern="dd/MM/yyyy H:mm" showButtonPanel="false" 
+                                        locale="br"  required="true" rendered="#{calendarioController.reserva.grupoReserva==null}"  >  
+
+                                <p:ajax event="dateSelect" listener="#{calendarioController.onValueChangeHoraInicio}" update="to,ck"  />
+
+                            </p:calendar>
+
+                            <h:outputLabel for="to" value="Fim*:" rendered="#{calendarioController.reserva.grupoReserva==null}"/>  
+                            <p:calendar id="to"  stepMinute="5"  value="#{calendarioController.reserva.fim}"
+                                        minHour="#{calendarioController.reserva.inicio.hours}" timeOnly="false" 
+                                        pattern="dd/MM/yyyy H:mm" showButtonPanel="false"   locale="br" 
+                                        required="true" widgetVar="w" rendered="#{calendarioController.reserva.grupoReserva==null}">
+                                <p:ajax event="dateSelect"  update="ck"/>
+                            </p:calendar>
+
+
+
+
+                            <h:outputLabel for="title" value="Motivo:" />  
+                            <p:inputText id="title" value="#{calendarioController.reserva.motivo}">     
+                            </p:inputText>
+
+                            <h:outputLabel for="ck" value="Equipamentos:"  />
+                            <p:selectCheckboxMenu id="ck"   value="#{calendarioController.selectedEquipamentos}"  
+                                                  converter="equi" label="Adicionar Equipamentos" filter="true" 
+                                                  filterMatchMode="startsWith"  >  
+                                <f:selectItems value="#{calendarioController.equipamentos}"     />  
+                            </p:selectCheckboxMenu> 
+
+                            <p:outputLabel value="Itens Reservados" rendered="#{!calendarioController.novaReserva}"/>
+                            <p:dataTable id="dtRecursosEscolhidos" rendered="#{!calendarioController.novaReserva}" 
+                                         var="rec" value="#{calendarioController.recursoDataModel}" selectionMode="single">  
+                                <p:column >  
+                                    <h:outputText value="#{rec.toString()}" />  
+                                </p:column>  
+
+                                <p:column style="text-align: center" >  
+                                    <p:commandLink  value="x" action="#{calendarioController.removeRecursoReserva}" 
+                                                    update="dtRecursosEscolhidos"  />
+                                </p:column>  
+                            </p:dataTable>  
+
+
+                            <h:outputLabel  value="Repetir"  rendered="#{calendarioController.novaReserva}" />
+                            <p:selectBooleanCheckbox id="checkReservaSemanal"  value="#{calendarioController.reservaSemanal}"  
+                                                     rendered="#{calendarioController.reserva.iid == null}"   >  
+                                <p:ajax    update="smcDiasSemana,finalDate2"/> 
+                            </p:selectBooleanCheckbox> 
+
+                            <h:outputLabel  value="Repete:" rendered="#{calendarioController.reserva.iid == null}"  />
+                            <p:selectManyCheckbox  id="smcDiasSemana"  value="#{calendarioController.diasEscolhidos}" 
+                                                   rendered="#{calendarioController.reserva.iid == null}" 
+                                                   disabled="#{!calendarioController.reservaSemanal}"  >  
+                                <f:selectItem itemLabel="Seg" itemValue="Seg" /> 
+                                <f:selectItem itemLabel="Ter" itemValue="Ter" />  
+                                <f:selectItem itemLabel="Qua" itemValue="Qua" />  
+                                <f:selectItem itemLabel="Qui" itemValue="Qui" />  
+                                <f:selectItem itemLabel="Sex" itemValue="Sex" />  
+                            </p:selectManyCheckbox> 
+
+                            <h:outputLabel  value="Termina:" rendered="#{calendarioController.reserva.iid == null}"/>
+                            <h:panelGrid columns="2" rendered="#{calendarioController.reserva.iid == null}"> 
+                                <h:outputLabel  value="Data final" rendered="#{calendarioController.reserva.iid == null}" />
+                                <p:calendar id="finalDate2"   value="#{calendarioController.dataFinalReservaSemanal}" 
+                                            required="true" pattern="dd/MM/yyyy"   locale="br"  widgetVar="w" 
+                                            rendered="#{calendarioController.reserva.iid == null}" 
+                                            disabled="#{!calendarioController.reservaSemanal}" />
+                            </h:panelGrid>
+
+                            <p:commandButton id="addButton"  value="Salvar" actionListener="#{calendarioController.salvaReserva}" 
+                                             oncomplete="myschedule.update();detalhesReserva.hide();" update=":form2:dtEquipamento,messages,form:schedule" 
+                                             rendered="#{calendarioController.reserva.iid == null}" />
+                            <p:commandButton id="updateButton"  value="Atualizar" actionListener="#{calendarioController.updateReserva}" 
+                                             oncomplete="myschedule.update();detalhesReserva.hide();" update=":form2:dtEquipamento,messages" 
+                                             rendered="#{calendarioController.reserva.iid != null}"/>
+                            <p:commandButton id="remButton"  value="Remover" actionListener="#{calendarioController.remReserva}" 
+                                             oncomplete="myschedule.update();detalhesReserva.hide();" 
+                                             rendered="#{calendarioController.reserva.iid != null}" 
+                                             update=":form2:dtEquipamento,:form1:dtSala"/>  
+                            <p:commandButton id="cancelButton"  value="Cancelar"  oncomplete="detalhesReserva.hide();"  
+                                             rendered="#{calendarioController.reserva.iid == null}"/> 
+
+                            <p:commandButton id="criarEmprestimoButton"  value="Criar Emprestimo"  oncomplete="detalhesReserva.hide();"  
+                                             action="#{calendarioController.criaEmprestimo()}" rendered="#{calendarioController.possuiEmprestimo()}"/> 
+
+                            <p:commandButton id="verEmprestimoButton"  value="Ver Emprestimo"  oncomplete="detalhesReserva.hide();"  
+                                             rendered="#{calendarioController.reserva.emprestimo != null}" action="#{calendarioController.verEmprestimo()}"/> 
+
+
+                        </h:panelGrid>  
+                    </p:dialog>
+
+
+                    <p:dialog id="janela3" widgetVar="eventDialogSelectRecurso" header="Selecione um recurso" >
+                        <p:panel style="display: block;text-align: center">
+                            <h:outputLabel value="Por favor, selecione uma sala ou um equipamento para fazer a reserva."  />
+                            <br/>
+                            <br/>
+                            <p:commandButton id="okButton2"  value="OK" oncomplete="eventDialogSelectRecurso.hide();"  
+                                             style="width: 100px" />  
+                        </p:panel>
+                    </p:dialog>
+
+                    <p:dialog id="janela2" widgetVar="recursoOcupado" header="Recurso Ocupado" >
+                        <p:panel style="display: block;text-align: center">
+                            <h:outputLabel value="Esta sala ou este equipamento está ocupado(a) neste horário."  />
+                            <br/>
+                            <h:outputLabel value="Favor selecionar outro horário" />
+                            <br/>
+                            <br/>
+                            <p:commandButton id="okButton" value="OK" oncomplete="recursoOcupado.hide();"  style="width: 100px" />  
+                        </p:panel>
+                    </p:dialog>
+
+                    <p:dialog id="janela4" widgetVar="horarioInvalido" header="Horário Inválido" >
+                        <p:panel style="display: block;text-align: center">
+                            <h:outputLabel value="Esta data expirou."  />
+                            <br/>
+                            <br/>
+                            <p:commandButton id="okButton3"  value="OK" oncomplete="horarioInvalido.hide();"  style="width: 100px" />  
+                        </p:panel>
+                    </p:dialog>
+
+                    <p:dialog id="janela5" widgetVar="reservasIndisponiveis" header="Reservas Indisponíveis" dynamic ="true"   >
+                        <p:panel style="display: block;text-align: center">
+                            <h:outputLabel value="Alguma(s) reserva(s) possue(m) um ou mais recursos"  />
+                            <br/>
+                            <h:outputLabel value="ocupados na(s) data(s) solicitada(s) abaixo"/>
+                            <br/>
+                            <h:outputLabel value="e não serão salvas."/>
+                            <br/>
+                            <p:dataList value="#{calendarioController.reservasImpossiveis}" var="reservaImpossivel" itemType="disc"  >
+                                <p:column >
+                                    #{reservaImpossivel.dataInicio} 
+                                </p:column>
+                            </p:dataList>
+                            <br/>
+                            <p:commandButton id="okButton5"  value="OK" oncomplete="reservasIndisponiveis.hide();"   style="width: 100px" />  
+                        </p:panel>
+                    </p:dialog>
+
+                    <p:dialog id="janela6" widgetVar="removerReservaSemanal" header="Remover Reservas"  dynamic="true"  >
+                        <p:panel style="display: block;text-align: center">
+                            <h:outputLabel value="Esta reserva pertence a um grupo de reservas."  />
+                            <br/>
+                            <h:outputLabel value="Deseja apagar todas as reservas do grupo ou"/>
+                            <br/>
+                            <h:outputLabel value="somente esta reserva individualmente."/>
+                            <br/>
+                            <h:panelGrid columns="2" style="display: block;text-align: center">
+                                <p:commandButton id="okButton6"  value="Somente Esta"  actionListener="#{calendarioController.removeReservaIndividual()}" 
+                                                 oncomplete="removerReservaSemanal.hide();myschedule.update();"    />  
+                                <p:commandButton id="okButton7"  value="Todas as Reservas"  actionListener="#{calendarioController.removeReservaSemanal()}"
+                                                 oncomplete="removerReservaSemanal.hide();myschedule.update();"   />  
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:dialog>
+
+                    <p:dialog  widgetVar="recursoNaoApagavel" header="Remover Recurso" >
+                        <p:panel style="display: block;text-align: center">
+                            <h:outputLabel value="O recurso principal não pode ser removido."  />
+                            <br/>
+                            <p:commandButton   value="OK" oncomplete="recursoNaoApagavel.hide();myschedule.update();"    />  
+                        </p:panel>
+                    </p:dialog>
+
+                    <p:dialog  widgetVar="criarEmprestimo" header="Criar Emprestimo" draggable="false"  >
+                        <p:panel style="text-align: center">
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="Pessoa Retirou"  />
+                                <p:inputText value="#{calendarioController.emprestimo.responsavelRetirada}"/>
+
+                                <h:outputLabel value="Data Retirada"  />
+                                <p:calendar id="dataRetirada" value="#{calendarioController.emprestimo.retirada}" 
+                                            minHour="07" timeOnly="false" pattern="dd/MM/yyyy H:mm" showButtonPanel="true" 
+                                            locale="br"     >  
+                                </p:calendar>
+                                <p:commandButton   value="OK" oncomplete="criarEmprestimo.hide();myschedule.update();"  actionListener="#{calendarioController.salvaEmprestimo()}"  /> 
+                                <p:commandButton   value="Cancelar" oncomplete="criarEmprestimo.hide();myschedule.update();"    /> 
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:dialog>
+
+                </h:form>  
+            </p:layoutUnit>  
+        </p:layout>  
+
+
+
+
+        <script type="text/javascript">
+            PrimeFaces.locales['br'] = {
+                closeText: 'Fechar',
+                prevText: 'Anterior',
+                nextText: 'Próximo',
+                currentText: 'Hoje',
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Só Horas',
+                timeText: 'Tempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                ampm: false,
+                month: 'Mês',
+                week: 'Semana',
+                day: 'Dia',
+                allDayText: 'Hora'
+            };
+        </script>
+        <br/>
+
+
+
+
+    </h:body>
+</html>
+

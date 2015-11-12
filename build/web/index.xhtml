@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <link href='http://fonts.googleapis.com/css?family=Play' rel='stylesheet' type='text/css'/>
+
+        <title>Gerenciar Dados</title>
+
+    </h:head>
+    <h:body onload="#{loginBean.isLogado()}">
+        <h:outputStylesheet library="css" name="style.css"  />
+
+        <br />
+
+        <br/>
+        <h:form>
+
+            <p:layout fullPage="true">  
+
+                <p:layoutUnit position="north" style="text-align:center" size="70" resizable="true" closable="true" collapsible="true">  
+                    <!--                    <h:graphicImage value="resources/images/cmcc.png" >  </h:graphicImage>-->
+                    <style type="text/css">
+                        /*                                                                .ui-widget{font-size:90% !important;}*/
+                        .ui-layout-unit-content{background-image:url('resources/images/grey-back.jpg');}
+                    </style>
+                    <div style="color: #2E8B57 ;font-family: 'Play', serif;font-size: 24px; position: relative; top: 10px">Calendário de Alocação de Salas e Equipamentos</div>
+                    <!--                    <p:outputLabel value="Calendário de Alocação de Salas e Equipamentos" style="color: green;font-size: 37px;font-weight: bold"/>-->
+
+                    <h:commandLink value="Logout" style="position: relative; left: 650px; bottom: 30px; color: #2E8B57" 
+                                   action="#{loginBean.doLogout()}" immediate="true"/>
+                </p:layoutUnit>  
+
+             
+
+
+                <p:layoutUnit position="center"> 
+                    
+                    
+
+                    <p:panel style="display: block; text-align: center; width: 300px;position: relative; top: 60px" styleClass="panelCenter">
+
+                        <p:commandLink id="linkCentro" action= "/view/centro/List"   >  
+                            <p:commandButton value="Centros" id="btnCentro" style="width: 160px"/>
+                        </p:commandLink>
+
+                        <p:separator/>
+
+                        <p:commandLink id="linkDocente" action= "/view/docente/List"   >  
+                            <p:commandButton value="Docentes" id="btnDocente"  style="width: 160px" >
+                                <!--  <h:graphicImage value="resources/images/book2.png" />  -->
+                            </p:commandButton>
+                        </p:commandLink>
+
+                        <p:separator/>
+
+                        <p:commandLink id="linkTA" action= "/view/TA/List"   >  
+                            <p:commandButton value="TAs" id="btnTA" style="width: 160px"/>
+                        </p:commandLink> 
+
+                        <p:separator/>
+
+                        <p:commandLink id="linkSala" action= "/view/sala/List"   >  
+                            <p:commandButton value="Salas" id="btnSala" style="width: 160px"/>
+                        </p:commandLink> 
+
+                        <p:separator/>
+
+                        <p:commandLink id="linkEquipamento" action= "/view/equipamento/List"   >  
+                            <p:commandButton value="Equipamentos" id="btnEquipamento" style="width: 160px"/>
+                        </p:commandLink> 
+
+                        <p:separator/>
+
+                        <p:commandLink id="linkCalendario" action="/Calendario"    >  
+                            <p:commandButton value="Calendário" id="btnCalendario" style="width: 160px" /> 
+                        </p:commandLink>
+
+                        <p:separator/>
+
+                        <p:commandLink id="linkEmpretimo" action="/view/emprestimo/Emprestimo"  >  
+                            <p:commandButton value="Empréstimos" id="btnEmprestimo" style="width: 160px" /> 
+                        </p:commandLink>
+                        
+                        <p:separator rendered="#{loginBean.adm}"  />
+
+                        <p:commandLink id="linkUsuario" action="/view/usuario/List" rendered="#{loginBean.adm}"  >  
+                            <p:commandButton value="Usuários" id="btnUsuario" style="width: 160px" /> 
+                        </p:commandLink>
+                        
+                        <p:separator/>
+
+                        <h:commandLink id="linkManual" action="ManualUsuario.html"   >  
+                            <p:commandButton value="Manual do Usuário" id="btnManual" style="width: 160px" /> 
+                        </h:commandLink>
+                        
+
+                    </p:panel>
+
+                </p:layoutUnit>  
+
+            </p:layout>  
+
+
+
+        </h:form>
+    </h:body>
+</html>
+

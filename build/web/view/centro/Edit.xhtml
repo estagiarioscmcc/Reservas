@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <link href='http://fonts.googleapis.com/css?family=Play' rel='stylesheet' type='text/css'/>
+        <title>Editar Centro</title>
+    </h:head>
+    <h:body onload="#{loginBean.isLogado()}">
+        <h:form>
+
+            <h:outputStylesheet library="css" name="style.css"  />
+            <p:layout fullPage="true">  
+
+                <p:layoutUnit style="text-align:center" position="north" size="75"  resizable="true" closable="true" collapsible="true" >  
+
+                    <!--                    <h:graphicImage value="resources/images/cmcc.png" />-->
+                    <style type="text/css">
+                        /*                                                                .ui-widget{font-size:90% !important;}*/
+                        .ui-layout-unit-content{background-image:url('resources/images/grey-back.jpg');}
+                    </style>
+                    <div style="color: #2E8B57 ;font-family: 'Play', serif;font-size: 24px; position: relative; top: 10px">Calendário de Alocação de Salas e Equipamentos</div>
+<!--                    <p:outputLabel value="Calendário de Alocação de Salas e Equipamentos" style="color: green;font-size: 37px;font-weight: bold"/>-->
+                <h:commandLink value="Logout" style="position: relative; left: 650px; bottom: 30px; color: #2E8B57" 
+                                   action="#{loginBean.doLogout()}" immediate="true"/>
+                </p:layoutUnit>  
+
+                <p:layoutUnit position="west" size="180" header="Links Rápidos" style="text-align: center" resizable="true"  >  
+                    <!--                    <p:commandLink id="linkListDocente" action="/view/docente/List" immediate="true" value="Lista de Docentes"/>  
+                                        <br/>
+                                        <p:commandLink id="linkListTA" action="/view/TA/List" immediate="true" value="Lista de TAs"/>  
+                                        <br/>
+                                        <p:commandLink id="linkListSala" action="/view/sala/List"  value="Lista de Salas" immediate="true"/>  
+                                        <br/>
+                                        <p:commandLink id="linkListEquipamento" action="/view/equipamento/List" immediate="true" value="Lista de Equipamentos"/>  
+                                        <br/>
+                                        <p:separator/>
+                                        <h:link outcome="/index" value="Gerenciar Dados"  />
+                                        <p:separator/>
+                                        <h:link outcome="/Calendario" value="Calendario"  />
+                                        <p:separator/>-->
+
+
+                    <!--                    <p:panel style="display: block; text-align: center; width: 300px;position: relative; top: 60px" styleClass="panelCenter">-->
+
+
+
+
+
+                    <p:commandButton  value="Docentes" id="btnDocente"  style="width: 140px; position: relative; top: 5px"  action="/view/docente/List" immediate="true"/>
+                    <br/>
+
+                    <p:commandButton  value="TAs" id="btnTA" style="width: 140px; position: relative; top: 10px" action= "/view/TA/List" immediate="true"/>
+                    <br/>
+
+                    <p:commandButton value="Salas" id="btnSala" style="width: 140px;position: relative; top: 15px" action= "/view/sala/List" immediate="true"/>
+                    <br/>
+
+                    <p:commandButton value="Equipamentos" id="btnEquipamento" style="width: 140px;position: relative; top: 20px" action= "/view/equipamento/List" immediate="true"/>
+
+                    <p:separator style="position: relative; top: 25px"/>
+
+
+                    <p:commandButton value="Calendário" id="btnCalendario" style="width: 140px; position: relative; top: 30px" action="/Calendario" immediate="true" /> 
+                    <p:separator style="position: relative; top: 35px"/>
+
+                    <p:commandButton value="Gerenciar Dados" id="btnDados" style="width: 140px; position: relative; top: 40px; font-size: smaller" action="/index" immediate="true" /> 
+
+
+
+
+                </p:layoutUnit>   
+
+                <p:layoutUnit position="center"> 
+                    <p:panel header="Editar Dados do Docente" style=" text-align: left; width: 600px; position: relative; top: 50px" styleClass="panelCenter">
+                        <h:panelGrid columns="2" id="grid">
+
+                            <h:outputLabel value="Nome:* " for="nome" />
+                            <h:inputText id="nome" value="#{centroController.selected.nome}" title="Você deve inserir o nome de um centro com pelo menos 2 caracteres" 
+                                         required="true" requiredMessage="Por favor digite um nome para o Centro"/>
+                           
+                                <p:tooltip for="nome" showEvent="focus" hideEvent="blur" /> 
+                            
+                            
+                            
+                            
+
+                        </h:panelGrid>
+
+                        <p:separator/>
+                        
+                        
+                        
+                        
+                        <p:commandButton style="width: 190px;height: 30px"
+                                         actionListener="#{centroController.update()}" value="Atualizar centro" 
+                                                 update="msgs,grid" icon="ui-icon-pencil"/>
+                       
+                        
+                        
+
+                        <p:separator/>
+
+                        <p:commandButton style="width: 225px;height: 30px; font-size: small"
+                                                 action="#{centroController.prepareList}" value="Mostrar todos os centros" immediate="true"/>
+                        
+                    </p:panel>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" style="text-align:center" size="80"  resizable="true" closable="true" collapsible="true">  
+                    <p:messages id="msgs" showDetail="true"/>   
+                </p:layoutUnit>
+
+            </p:layout>
+        </h:form>
+    </h:body>
+
+
+</html>

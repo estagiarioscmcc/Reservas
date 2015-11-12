@@ -69,7 +69,6 @@ public class DocenteController implements Serializable {
         current = (Docente) docenteDataModel.getRowData();
         
         performDestroy();
-        recreatePagination();
         recreateModel();
         return "List";
     }
@@ -205,48 +204,19 @@ public class DocenteController implements Serializable {
         }
     }
 
-    public PaginationHelper getPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-                @Override
-                public int getItemsCount() {
-                    return getFacade().count();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
-                }
-            };
-
-        }
-        return pagination;
-    }
+   
 
     public DataModel getItems() {
         if (items == null) {
-            items = getPagination().createPageDataModel();
+            List<Docente> docentes = docenteFacade.findAll();
+            items = new DocenteDataModel(docentes);
 
         }
         return items;
     }
+    
 
-    private void recreatePagination() {
-        pagination = null;
 
-    }
-
-    public String next() {
-        getPagination().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previous() {
-        getPagination().previousPage();
-        recreateModel();
-        return "List";
-    }
 
     public SelectItem[] getItemsAvailableSelectOne() {
 

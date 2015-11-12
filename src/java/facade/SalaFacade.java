@@ -7,7 +7,6 @@ package facade;
 import controller.HibernateUtil;
 import java.util.List;
 import javax.ejb.Stateless;
-import model.Docente;
 import model.Sala;
 import org.hibernate.Criteria;
 import org.hibernate.Session;

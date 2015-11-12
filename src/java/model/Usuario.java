@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 
 public class Usuario implements Serializable {
 
-    private static final long SerialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +29,6 @@ public class Usuario implements Serializable {
         this.ID = ID;
     }
 
-//    @OneToOne(cascade = CascadeType.REFRESH)
     @OneToOne
     private TA ta;
 
@@ -55,16 +54,6 @@ public class Usuario implements Serializable {
         this.login = login;
     }
 
-//    private String senha;
-//
-//    public String getSenha() {
-//        return senha;
-//    }
-//
-//    public void setSenha(String senha) {
-//        this.senha = senha;
-//    }
-
     private boolean adm;
 
     public boolean isAdm() {
@@ -86,9 +75,7 @@ public class Usuario implements Serializable {
     public void setEhAdm(String ehAdm) {
         this.ehAdm = ehAdm;
     }
-    
-    
-
+       
     @Override
     public int hashCode() {
         int hash = 0;

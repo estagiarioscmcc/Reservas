@@ -1,14 +1,12 @@
 package facade;
 
+import controller.HibernateUtil;
 import java.util.List;
-import java.util.Map;
-import javax.persistence.criteria.Root;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
-import org.primefaces.model.SortOrder;
 
 public abstract class AbstractFacade<T> {
 
@@ -109,12 +107,15 @@ public abstract class AbstractFacade<T> {
      */
     public List<T> findAll() {
         Session session = getSessionFactory().openSession();
+//        HibernateUtil.printStatistics();
         Criteria crit = session.createCriteria(entityClass);
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);//faz um select distinct
         
         //crit.setMaxResults(50);
         List results = crit.list();
+//        HibernateUtil.printStatistics();
         session.close();
+        
         return results;
     }
 

@@ -4,6 +4,7 @@ import model.Centro;
 import facade.CentroFacade;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -23,10 +24,6 @@ import util.CentroDataModel;
 @SessionScoped
 public class CentroController implements Serializable {
 
-
-    
-    
-    
     private Centro current;
     private DataModel items = null;
 
@@ -91,7 +88,6 @@ public class CentroController implements Serializable {
 //        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
 //        return "View";
 //    }
-
     public String prepareCreate() {
         current = new Centro();
         selectedItemIndex = -1;
@@ -240,9 +236,18 @@ public class CentroController implements Serializable {
     }
 
     public SelectItem[] getItemsAvailableSelectOne() {
-        
+
         List<Centro> centros = centroFacade.findAll();
-        Collections.sort(centros);
+//        Collections.sort(centros);
+        Collections.sort(centros, new Comparator<Centro>() {
+            
+            @Override
+            public int compare(Centro c1, Centro c2) {
+
+                return c1.getNome().compareTo(c2.getNome());
+
+            }
+        });
         return JsfUtil.getSelectItems(centros, true);
     }
 
@@ -289,5 +294,4 @@ public class CentroController implements Serializable {
         }
     }
 
-   
 }

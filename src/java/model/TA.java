@@ -8,10 +8,7 @@ import java.io.Serializable;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-/**
- *
- * @author charles
- */
+
 @Entity
 @DiscriminatorValue("TA")
 public class TA extends Servidor implements Serializable{

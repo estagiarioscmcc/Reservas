@@ -23,6 +23,7 @@ import model.TA;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.LazyDataModel;
+import util.QueryDataModel;
 import util.ReservaDataModel;
 import util.ReservaLazyModel;
 
@@ -34,6 +35,26 @@ public class ReservaController implements Serializable {
     private ReservaDataModel reservaDataModel;
     
     private ReservaLazyModel reservaLazyModel;
+    
+    private LazyDataModel<Reserva> reservasLazyModel;
+
+    public LazyDataModel<Reserva> getReservasLazyModel() {
+        
+        if(reservasLazyModel == null){
+            String jpql = "select r from Reserva r";
+            String count = "select count(r.iid) from Reserva r";
+            
+            reservasLazyModel = new QueryDataModel<Reserva>(jpql, count);
+        }
+        
+        return reservasLazyModel;
+    }
+
+    public void setReservasLazyModel(LazyDataModel<Reserva> reservasLazyModel) {
+        this.reservasLazyModel = reservasLazyModel;
+    }
+    
+    
     
 //    @PostConstruct
 //    public void init() {
@@ -51,6 +72,7 @@ public class ReservaController implements Serializable {
     
     public LazyDataModel<Reserva> getReservaLazyModel() {
         if (reservaLazyModel == null) {
+            
             reservaLazyModel = new ReservaLazyModel();
         }
  
@@ -101,7 +123,7 @@ public class ReservaController implements Serializable {
     }
     
     public void updateEmprestimo() {
-        current = (Reserva) reservaLazyModel.getRowData();
+        current = (Reserva) reservasLazyModel.getRowData();
         reservaFacade.merge(current);
     }
     
@@ -189,7 +211,7 @@ public class ReservaController implements Serializable {
     }
     
     public String prepareEdit() {
-        current = (Reserva) reservaLazyModel.getRowData();
+        current = (Reserva) reservasLazyModel.getRowData();
         //selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
     }
@@ -209,7 +231,7 @@ public class ReservaController implements Serializable {
     
     public String destroy() {
 //        current = (Reserva) reservaDataModel.getRowData();
-        current = (Reserva) reservaLazyModel.getRowData();
+        current = (Reserva) reservasLazyModel.getRowData();
 //        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         performDestroy();
 //        recreatePagination();
@@ -263,7 +285,7 @@ public class ReservaController implements Serializable {
     
     private void recreateModel() {
 //        items = null;
-        reservaLazyModel = null;
+        reservasLazyModel = null;
     }
     
     private void recreatePagination() {

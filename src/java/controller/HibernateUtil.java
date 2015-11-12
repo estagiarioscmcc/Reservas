@@ -5,17 +5,11 @@
 package controller;
 
 import org.hibernate.Session;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-/**
- * Hibernate Utility class with a convenient method to get Session Factory
- * object.
- *
- * @author charles
- */
+
 public class HibernateUtil {
 
     private static final SessionFactory sessionFactory;
@@ -42,4 +36,38 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
+    
+//    public static Statistics getStatistics() {
+//        if (!sessionFactory.getStatistics().isStatisticsEnabled()) {
+//            sessionFactory.getStatistics().setStatisticsEnabled(true);
+//        }
+//        return sessionFactory.getStatistics();
+//    }
+//    
+//    public static void printStatistics(){
+//        
+//        Statistics stats = getStatistics();
+//        
+//        System.out.println("Qtd. de entidades buscadas: " + stats.getEntityFetchCount());
+//        System.out.println("Qtd. de entidades carregas: " + stats.getEntityLoadCount());
+//        System.out.println("Qtd. de listas buscadas: " + stats.getCollectionFetchCount());
+//        System.out.println("Qtd. de listas carregadas: " + stats.getCollectionLoadCount());
+//        
+//        double queryCacheHitCount = stats.getQueryCacheHitCount();
+//        double queryCacheMissCount = stats.getQueryCacheMissCount();
+//        double totalQueries = queryCacheHitCount + queryCacheMissCount;
+//        double queryCacheHitRatio = (totalQueries == 0) ? 0 : queryCacheHitCount / totalQueries;
+//        
+//        System.out.println("Qtd. de consultas encontradas no cache: " + queryCacheHitCount);
+//        System.out.println("Qtd. de consultas fora do cache: " + queryCacheMissCount);
+//        System.out.println("Proporção de acerto do cache: " + queryCacheHitRatio);
+//        System.out.println("Qtd. de consultas executadas: " + stats.getQueryExecutionCount());
+//        
+//        String[] queries = stats.getQueries();
+//        for(int i = 0; i < queries.length; i++){
+//            System.out.println("Consulta " + i + ": " + queries[i]);
+//        }
+//        
+//        System.out.println("Query mais lenta: " + stats.getQueryExecutionMaxTimeQueryString());
+//    }
 }
